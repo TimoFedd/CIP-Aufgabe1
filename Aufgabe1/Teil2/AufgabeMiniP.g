@@ -14,11 +14,10 @@ OPENSQUARE	: 	'[';
 CLOSESQUARE	: 	']';
 OPENROUND	: 	'(';
 CLOSEROUND	:	')';
-OPENCOMMENT	:	'/*';
-CLOSECOMMENT	:	'*/';
-
 	
 WS       	:	(' '|'\t'|'\n'|'\r'|'\f')+{ $channel=HIDDEN; };
+COMENTS		: 	('/*' .* '*/')   { $channel=HIDDEN; };  // das .* bedeutet in ANTLR, beliebiges Zeichen beliebig oft
+
 
 fragment LETTER	:	('a'..'z'|'A'..'Z');
 fragment DIGIT	:	('0'..'9');
