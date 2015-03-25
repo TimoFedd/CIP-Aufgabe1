@@ -1,0 +1,4 @@
+grammar AufgabeMiniP;
+
+
+PROGRAM	:	'program'

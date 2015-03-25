@@ -1,0 +1,13 @@
+program[
+string hallo;
+integer zahl;
+
+]
+begin
+
+
+/*Dies ist unser erstes MiniP Program :) */
+
+hallo:='Hallo welt';
+zahl:=5+6;
+end
