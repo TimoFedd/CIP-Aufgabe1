@@ -1,10 +1,13 @@
 grammar AufgabeMiniP;
 
-start	:	 PROGRAM OPENSQUARE declaration CLOSESQUARE;
+start		:	PROGRAM OPENSQUARE declaration* CLOSESQUARE;
 
-declaration	:	ID;
+declaration	:	DATATYPE ID (',' ID)* ';';
 
 PROGRAM		:	P R O G R A M;
+// Wieso nun doch Reihenfolge relevant??
+DATATYPE        :	I N T E G E R | R E A L | S T R I N G | B O O L E A N;
+// Neitzke fragen, wieso Fehler bei Variable, die falsch anfängt, nur im Output-Stream geworfen wird und nicht im Parsetree??
 ID		:	LETTER (LETTER|DIGIT|'_')*;
 
 OPENSQUARE	: 	'[';
@@ -15,7 +18,7 @@ OPENCOMMENT	:	'/*';
 CLOSECOMMENT	:	'*/';
 
 	
-WS       :           (' '|'\t'|'\f'|'\n'|'\r')+{ $channel=HIDDEN; };
+WS       	:	(' '|'\t'|'\n'|'\r'|'\f')+{ $channel=HIDDEN; };
 
 fragment LETTER	:	('a'..'z'|'A'..'Z');
 fragment DIGIT	:	('0'..'9');
