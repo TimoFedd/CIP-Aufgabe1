@@ -8,12 +8,12 @@ lineop	:	OP OP OP;
 linesum	:	EQUAL EQUAL EQUAL;
 block	: 	SYMBOL+;
 
-SYMBOL	: ('A'..'Z');
-OP	: '+'|'-';
-EQUAL	:  '=';
+SYMBOL	:	('A'..'Z');
+OP	:	'+'|'-';
+EQUAL	: 	'=';
 
 
-WS       :           (' '|'\t'|'\f'|'\n'|'\r')+{ $channel=HIDDEN; };
+WS      :	(' '|'\t'|'\f'|'\n'|'\r')+{ $channel=HIDDEN; };
 
 
 
