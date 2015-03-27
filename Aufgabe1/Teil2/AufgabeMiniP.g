@@ -1,11 +1,26 @@
 grammar AufgabeMiniP;
 
-start		:	PROGRAM OPENSQUARE declaration* CLOSESQUARE;
-
+start		:	PROGRAM OPENSQUARE declaration* CLOSESQUARE statement* END;
 declaration	:	DATATYPE ID (',' ID)* ';';
+assignment      :	ID ':=' compare;                     //( stringType | arithmetic_expression | compare );   Sollte eigentlich so ausehen und muss noch erweitert werden
+statement       :	(assignment | read_statement | while_statement) SEM;
 
+read_statement 	: 	READ OPENROUND ID CLOSEROUND;
+while_statement :	WHILE compare DO statement* OD; 
+
+compare 	:	OPENROUND ID COMPARATOR ID CLOSEROUND; 
+
+OD		:       O D;	
+DO		:       D O;	
+WHILE 		:       W H I L E;	
+READ 		:	R E A D;
+COMPARATOR 	:	'==' | '<>' | '<' | '>';   
+IF 		:	I F;
+THEN 		:	T H E N;
+ELSE 		:	E L S E;
+FI		:	F I;
+END 		:	E N D;
 PROGRAM		:	P R O G R A M;
-// Wieso nun doch Reihenfolge relevant??
 DATATYPE        :	I N T E G E R | R E A L | S T R I N G | B O O L E A N;
 // Neitzke fragen, wieso Fehler bei Variable, die falsch anfängt, nur im Output-Stream geworfen wird und nicht im Parsetree??
 ID		:	LETTER (LETTER|DIGIT|'_')*;
@@ -14,9 +29,13 @@ OPENSQUARE	: 	'[';
 CLOSESQUARE	: 	']';
 OPENROUND	: 	'(';
 CLOSEROUND	:	')';
+SEM  		:	 ';';
 	
 WS       	:	(' '|'\t'|'\n'|'\r'|'\f')+{ $channel=HIDDEN; };
 COMENTS		: 	('/*' .* '*/')   { $channel=HIDDEN; };  // das .* bedeutet in ANTLR, beliebiges Zeichen beliebig oft
+
+
+//****************************************Fragmente******************************************************************
 
 
 fragment LETTER	:	('a'..'z'|'A'..'Z');
