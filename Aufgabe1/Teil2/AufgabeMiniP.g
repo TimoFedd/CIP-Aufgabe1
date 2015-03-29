@@ -1,10 +1,10 @@
 grammar AufgabeMiniP;
 
-start		:	PROGRAM OPENSQUARE declaration* CLOSESQUARE statement* END;
-declaration	:	DATATYPE ID (',' ID)* ';';
-assignment      :	ID ':=' compare;                     //( stringType | arithmetic_expression | compare );   Sollte eigentlich so ausehen und muss noch erweitert werden
+start		:	PROGRAM  OPENSQUARE declaration* CLOSESQUARE statement* END;
+declaration	:	DATATYPE ID (',' ID)* SEM;
 statement       :	(assignment | read_statement | while_statement) SEM;
 
+assignment      :	ID ':=' (compare | STRINGCONST);     //Hier fehlen noch die arithmetic_expressions
 read_statement 	: 	READ OPENROUND ID CLOSEROUND;
 while_statement :	WHILE compare DO statement* OD; 
 
@@ -33,6 +33,7 @@ SEM  		:	 ';';
 	
 WS       	:	(' '|'\t'|'\n'|'\r'|'\f')+{ $channel=HIDDEN; };
 COMENTS		: 	('/*' .* '*/')   { $channel=HIDDEN; };  // das .* bedeutet in ANTLR, beliebiges Zeichen beliebig oft
+STRINGCONST	:       '\'' .* '\'';	
 
 
 //****************************************Fragmente******************************************************************
