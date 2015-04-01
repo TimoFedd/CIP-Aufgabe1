@@ -9,12 +9,17 @@ assignment      :	ID ASSIGNOR (compare | arithmetic | STRINGCONST | BOOLEANCONST
 read_statement 	: 	READ OPENROUND ID CLOSEROUND;
 while_statement :	WHILE compare DO statement* OD; 
 
-// TODO arithmetischer Vergleich
-compare 	:	OPENROUND ID COMPARATOR ID CLOSEROUND; 
+//compare 	:	OPENROUND (arithmetic | constants | ID) COMPARATOR (arithmetic | constants | ID) CLOSEROUND; 
+// wieso auch immer geht es mit ID nicht => kollidiert angeblich mit INTEGERCONST, was keinen Sinn ergibt...
+compare 	:	OPENROUND (arithmetic | constants) COMPARATOR (arithmetic | constants) CLOSEROUND; 
+constants	:	BOOLEANCONST | STRINGCONST | REALCONST;
+// arithmetic momentan nur mit Integer, nicht Realzahlen... Muss nachgebessert werden? Wenn ja, fragment Zahlen -> REAL | INT
+// WICHTIG: dann auch REALCONST aus constants raus
 arithmetic	:	(bracket | no_bracket)+;
-no_bracket	:	(ADD_SUB* (INTEGERCONST | ID)) (MULT_DIV no_bracket);
-bracket		:	OPENROUND no_bracket CLOSEROUND;
+no_bracket	:	(ADD_SUB | MULT_DIV)* (INTEGERCONST | ID);
+bracket		:	OPENROUND no_bracket+ CLOSEROUND;
 operator	:	MULT_DIV | ADD_SUB;
+
 
 OD		:       'od';	
 DO		:       'do';	
@@ -45,6 +50,7 @@ WS       	:	(' '|'\t'|'\n'|'\r'|'\f')+{ $channel=HIDDEN; };
 COMMENTS	: 	('/*' .* '*/')   { $channel=HIDDEN; };  // das .* bedeutet in ANTLR, beliebiges Zeichen beliebig oft
 BOOLEANCONST	:	'true' | 'false';
 STRINGCONST	:       '\'' .* '\'';	
+REALCONST	:	DIGIT+ '.' DIGIT+;
 INTEGERCONST	:	DIGIT+;
 ID		:	LETTER (LETTER|DIGIT|'_')*;
 
