@@ -1,24 +1,21 @@
 grammar AufgabeMiniP;
 
 
-start		:	PROGRAM  OPENSQUARE declaration* CLOSESQUARE BEGIN statement* END;
+start		:	PROGRAM  OPENSQUARE declaration* CLOSESQUARE BEGIN statement+ END;
 declaration	:	DATATYPE ID (COMMA ID)* SEM;
 statement       :	(assignment | read_statement | while_statement) SEM;
 
-assignment      :	ID ASSIGNOR (compare | arithmetic | STRINGCONST | BOOLEANCONST);
+assignment      :	ID ASSIGNOR (arithmetik	| compare | STRINGCONST | BOOLEANCONST);
 read_statement 	: 	READ OPENROUND ID CLOSEROUND;
 while_statement :	WHILE compare DO statement* OD; 
+compare 	:	OPENROUND (ID| constants ) COMPARATOR (ID|constants) CLOSEROUND; //IDs sind die Arytmetischen Variablen. Da können natürlich auch ausversehen String Variablen landen, aber das kann man dann wohl erst in der Semantikanaylse mit der Symboltabelle feststellen.
 
-//compare 	:	OPENROUND (arithmetic | constants | ID) COMPARATOR (arithmetic | constants | ID) CLOSEROUND; 
-// wieso auch immer geht es mit ID nicht => kollidiert angeblich mit INTEGERCONST, was keinen Sinn ergibt...
-compare 	:	OPENROUND (arithmetic | constants) COMPARATOR (arithmetic | constants) CLOSEROUND; 
-constants	:	BOOLEANCONST | STRINGCONST | REALCONST;
-// arithmetic momentan nur mit Integer, nicht Realzahlen... Muss nachgebessert werden? Wenn ja, fragment Zahlen -> REAL | INT
-// WICHTIG: dann auch REALCONST aus constants raus
-arithmetic	:	(bracket | no_bracket)+;
-no_bracket	:	(ADD_SUB | MULT_DIV)* (INTEGERCONST | ID);
-bracket		:	OPENROUND no_bracket+ CLOSEROUND;
-operator	:	MULT_DIV | ADD_SUB;
+constants	:	BOOLEANCONST | STRINGCONST | REALCONST | INTEGERCONST;
+
+
+arithmetik	  	 :	 multiplicationExpression(ADD_SUB multiplicationExpression)*;
+multiplicationExpression :       atom(MULT_DIV atom)* ;
+atom			 :       '-'? ( INTEGERCONST | ID |OPENROUND arithmetik CLOSEROUND );
 
 
 OD		:       'od';	
