@@ -3,12 +3,13 @@ grammar AufgabeMiniP;
 
 start		:	PROGRAM  OPENSQUARE declaration* CLOSESQUARE BEGIN statement+ END;
 declaration	:	DATATYPE ID (COMMA ID)* SEM;
-statement       :	(assignment | read_statement | while_statement) SEM;
+statement       :	(assignment | read_statement | while_statement |println) SEM;
 
 assignment      :	ID ASSIGNOR (arithmetik	| compare | STRINGCONST | BOOLEANCONST);
 read_statement 	: 	READ OPENROUND ID CLOSEROUND;
 while_statement :	WHILE compare DO statement* OD; 
 compare 	:	OPENROUND (ID| constants ) COMPARATOR (ID|constants) CLOSEROUND; //IDs sind die Arytmetischen Variablen. Da können natürlich auch ausversehen String Variablen landen, aber das kann man dann wohl erst in der Semantikanaylse mit der Symboltabelle feststellen.
+println 	:	PRINTLN OPENROUND(ID|STRINGCONST) CLOSEROUND;
 
 constants	:	BOOLEANCONST | STRINGCONST | REALCONST | INTEGERCONST;
 
@@ -31,6 +32,7 @@ FI		:	'fi';
 END 		:	'end';
 PROGRAM		:	'program';
 BEGIN		:	'begin';
+PRINTLN		:	'println';
 DATATYPE        :	'integer' | 'real' | 'string' | 'boolean';
 // Neitzke fragen, wieso Fehler bei Variable, die falsch anfängt, nur im Output-Stream geworfen wird und nicht im Parsetree??
 
