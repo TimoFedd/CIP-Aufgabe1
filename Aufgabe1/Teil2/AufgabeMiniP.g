@@ -15,7 +15,7 @@ constants	:	BOOLEANCONST | STRINGCONST | REALCONST | INTEGERCONST;
 
 arithmetik	  	 :	 multiplicationExpression(ADD_SUB multiplicationExpression)*;
 multiplicationExpression :       atom(MULT_DIV atom)* ;
-atom			 :       '-'? ( INTEGERCONST | ID |OPENROUND arithmetik CLOSEROUND );
+atom			 :       '-'? ( INTEGERCONST | REALCONST | ID |OPENROUND arithmetik CLOSEROUND );
 
 
 OD		:       'od';	
