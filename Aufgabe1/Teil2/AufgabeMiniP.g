@@ -3,22 +3,23 @@ grammar AufgabeMiniP;
 
 start		:	PROGRAM declaration*  BEGIN statement+ END; 
 declaration	:	DATATYPE ID (COMMA ID)* SEM;
-statement       :	(assignment | read_statement | while_statement |if_statement|println) SEM;
+statement       :	(assignment | read_statement | while_statement | if_statement | println) SEM;
+
 
 assignment      :	ID ASSIGNOR (arithmetik	| compare | STRINGCONST | BOOLEANCONST);
 read_statement 	: 	READ OPENROUND ID CLOSEROUND;
 while_statement :	WHILE compare DO statement* OD; 
-if_statement    :       IF compare THEN statement+ ( ELSE statement+)?  FI; 
+if_statement    :       IF compare THEN statement+ (ELSE statement+)?  FI; 
 
-compare 	:	OPENROUND (ID| constants ) COMPARATOR (ID|constants) CLOSEROUND; //IDs sind die Arytmetischen Variablen. Da können natürlich auch ausversehen String Variablen landen, aber das kann man dann wohl erst in der Semantikanaylse mit der Symboltabelle feststellen.
-println 	:	PRINTLN OPENROUND(ID|STRINGCONST) CLOSEROUND;
+
+compare 	:	OPENROUND (ID | constants) COMPARATOR (ID | constants) CLOSEROUND;
+println 	:	PRINTLN OPENROUND(ID | STRINGCONST) CLOSEROUND;
 
 constants	:	BOOLEANCONST | STRINGCONST | REALCONST | INTEGERCONST;
 
-
-arithmetik	  	 :	 multiplicationExpression(ADD_SUB multiplicationExpression)*;
-multiplicationExpression :       atom(MULT_DIV atom)* ;
-atom			 :       '-'? ( INTEGERCONST | REALCONST | ID |OPENROUND arithmetik CLOSEROUND );
+arithmetik	:	mult_expression(ADD_SUB mult_expression)*;
+mult_expression :       atom(MULT_DIV atom)* ;
+atom		:       ADD_SUB? (INTEGERCONST | REALCONST) | OPENROUND arithmetik CLOSEROUND | ID;
 
 
 OD		:       'od';	
@@ -37,7 +38,6 @@ BEGIN		:	'begin';
 PRINTLN		:	'println';
 DATATYPE        :	'integer' | 'real' | 'string' | 'boolean';
 
-
 OPENROUND	: 	'(';
 CLOSEROUND	:	')';
 COMMA		:	',';
@@ -53,7 +53,8 @@ REALCONST	:	DIGIT+ '.' DIGIT+;
 INTEGERCONST	:	DIGIT+;
 ID		:	LETTER (LETTER|DIGIT|'_')*;
 
-//****************************************Fragmente******************************************************************
+
+//****************************************Fragments******************************************************************
 
 
 fragment LETTER	:	('a'..'z'|'A'..'Z');
